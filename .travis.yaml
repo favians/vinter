@@ -1,3 +1,4 @@
+dist: trusty
 sudo: enabled
 os: linux
 language: python
