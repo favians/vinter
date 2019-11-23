@@ -1,6 +1,6 @@
 FROM python:3.7.5-slim-stretch
 
-MAINTAINER Vian "Faviansyah"
+MAINTAINER Vinter "Virtual-Internship"
 
 WORKDIR /app
 
@@ -13,5 +13,5 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD [ "python3", "app.py" ]
+ENTRYPOINT [ "python3", "app.py" ]
 
