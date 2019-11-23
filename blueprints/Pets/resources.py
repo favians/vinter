@@ -6,7 +6,7 @@ from blueprints import internal_required, non_internal_required
 from flask_jwt_extended import jwt_required, get_jwt_claims
 
 from .model import Pets
-from blueprints.Client.model import Clients
+from blueprints.client.model import Clients
 
 from blueprints import db, app
 from sqlalchemy import desc
