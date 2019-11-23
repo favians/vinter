@@ -1,7 +1,7 @@
 sudo: enabled
 os: linux
 language: python
-  - lts/*
+  - "3.8"
 
 script:
   - openssl aes-256-cbc -k "${SSH_ENCRYPT_PASSWORD}" -in $TRAVIS_PROJECT_DIR/deployment/vinter.pem.enc -out $TRAVIS_PROJECT_DIR/deployment/vinter.pem -d
