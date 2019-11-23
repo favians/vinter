@@ -3,10 +3,10 @@ sudo: enabled
 os: linux
 language: python
 python:
-  - "2.7"
-  - "3.5"
+  - "3.6"
 
 script:
+  - openssl --version
   - openssl aes-256-cbc -k "${SSH_ENCRYPT_PASSWORD}" -in $TRAVIS_PROJECT_DIR/deployment/vinter.pem.enc -out $TRAVIS_PROJECT_DIR/deployment/vinter.pem -d
   - chmod 600 $TRAVIS_PROJECT_DIR/deployment/vinter.pem
 
