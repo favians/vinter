@@ -1,0 +1,15 @@
+sudo: enabled
+os: linux
+language: python
+  - lts/*
+
+script:
+  - openssl aes-256-cbc -k "${SSH_ENCRYPT_PASSWORD}" -in $TRAVIS_PROJECT_DIR/deployment/vinter.pem.enc -out $TRAVIS_PROJECT_DIR/deployment/vinter.pem -d
+	- chmod 600 $TRAVIS_PROJECT_DIR/deployment/vinter.pem
+
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: chmod +x $TRAVIS_PROJECT_DIR/deployment/deploy-travis.sh && $TRAVIS_PROJECT_DIR/deployment/deploy-travis.sh
+    on:
+      branch: development
