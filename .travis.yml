@@ -6,9 +6,9 @@ python:
   - "2.7"
   - "3.5"
 
-before_install:
+script:
   - openssl aes-256-cbc -k "${SSH_ENCRYPT_PASSWORD}" -in $TRAVIS_PROJECT_DIR/deployment/vinter.pem.enc -out $TRAVIS_PROJECT_DIR/deployment/vinter.pem -d
-	- chmod 600 $TRAVIS_PROJECT_DIR/deployment/vinter.pem
+  - chmod 600 $TRAVIS_PROJECT_DIR/deployment/vinter.pem
 
 deploy:
   - provider: script
