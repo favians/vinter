@@ -13,7 +13,7 @@ cache = SimpleCache()
 
 ######################################
 
-## initiate flask-restful instance
+## initiate flask-restful instances
 api = Api(app, catch_all_404s=True)
 
 
