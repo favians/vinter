@@ -11,7 +11,7 @@ from werkzeug.contrib.cache import SimpleCache
 
 cache = SimpleCache()
 
-######################################
+#######################################
 
 ## initiate flask-restful instances
 api = Api(app, catch_all_404s=True)
@@ -24,6 +24,8 @@ if __name__ == '__main__':
     log_handler.setFormatter(formatter)
     app.logger.addHandler(log_handler)
 
+    print("Program Started")
+    
     try:
         if sys.argv[1] == 'db':
             manager.run()
