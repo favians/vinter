@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restful import Api, Resource, reqparse, marshal
 import json, hashlib
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required, get_jwt_claims
-from blueprints.Interns.model import Interns
+from blueprints.Intern.model import Intern
 from blueprints.Company.model import Company
 
 bp_auth = Blueprint('auth', __name__)
@@ -18,13 +18,13 @@ class CreateInternTokenResource(Resource):
         password = hashlib.md5(args['password'].encode()).hexdigest()
 
         ###### from database ########
-        qry = Interns.query
+        qry = Intern.query
 
         qry = qry.filter_by(username = args['username'])
         qry = qry.filter_by(password = password).first()
          
 
-        claim = marshal(qry, Interns.response_field)
+        claim = marshal(qry, Intern.response_field)
 
         if qry is not None:
             token = create_access_token(identity=args['username'], user_claims=claim)

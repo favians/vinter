@@ -2,7 +2,7 @@ from blueprints import db
 from flask_restful import fields
 
 
-class Interns(db.Model):
+class Intern(db.Model):
     __tablename__ = "interns"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_at = db.Column(db.DateTime, nullable=False)
