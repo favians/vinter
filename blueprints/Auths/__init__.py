@@ -16,7 +16,7 @@ class CreateTokenResource(Resource):
 
         password = hashlib.md5(args['password'].encode()).hexdigest()
 
-        ###### from database #######
+        ###### from database ########
         qry = Clients.query
 
         qry = qry.filter_by(username = args['username'])
