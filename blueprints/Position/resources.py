@@ -11,14 +11,11 @@ from blueprints.Company.model import Company
 from blueprints import intern_only, company_only
 from flask_jwt_extended import jwt_required, get_jwt_claims
 
-#password Encription
-from password_strength import PasswordPolicy
-
 # 'position' penamaan (boleh diganti)
 bp_position = Blueprint('position', __name__)
 api = Api(bp_position)
 
-class InternResource(Resource):
+class PositionResource(Resource):
 
     @jwt_required
     def get(self):
@@ -89,7 +86,7 @@ class InternResource(Resource):
 
         return {"status":"success", "result":marshal(qry, Position.response_field)}, 200, {'Content-Type':'application/json'}
 
-class InternList(Resource):
+class PositionList(Resource):
 
     def __init__(self):
         pass
@@ -126,7 +123,7 @@ class InternList(Resource):
 
         return {"status":"success", "result":results}, 200, {'Content-Type':'application/json'}
 
-class InternListFull(Resource):
+class PositionListFull(Resource):
 
     def __init__(self):
         pass
@@ -167,6 +164,6 @@ class InternListFull(Resource):
         return {"status":"success", "result":results}, 200, {'Content-Type':'application/json'}
 
 
-api.add_resource(InternResource, '', '')
-api.add_resource(InternList,'','/list')
-api.add_resource(InternListFull,'','/listfull')
+api.add_resource(PositionResource, '', '')
+api.add_resource(PositionList,'','/list')
+api.add_resource(PositionListFull,'','/listfull')

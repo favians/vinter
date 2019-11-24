@@ -97,13 +97,15 @@ def after_request(response):
 ###############################
 
 from blueprints.Auth import bp_auth
-from blueprints.Interns.resources import bp_interns
+from blueprints.Intern.resources import bp_intern
 from blueprints.Company.resources import bp_company
 from blueprints.Position.resources import bp_position
+from blueprints.Task.resources import bp_task
 
 app.register_blueprint(bp_auth, url_prefix='/login')
-app.register_blueprint(bp_interns, url_prefix='/intern' )
+app.register_blueprint(bp_intern, url_prefix='/intern' )
 app.register_blueprint(bp_company, url_prefix='/company' )
 app.register_blueprint(bp_position, url_prefix='/position' )
+app.register_blueprint(bp_task, url_prefix='/task' )
 
 db.create_all()
