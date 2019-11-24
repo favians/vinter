@@ -6,6 +6,7 @@ from blueprints import db, app
 from sqlalchemy import desc
 
 from .model import Task
+from .validator import Validation
 from blueprints import intern_only, company_only
 from flask_jwt_extended import jwt_required, get_jwt_claims
 
@@ -30,7 +31,7 @@ class TaskResource(Resource):
         if taskQry is None:
             return {'status':'failed', "result" : "id not found"}, 404, {'Content-Type':'application/json'}
 
-        result = marshal(taskQry, Position.response_field)
+        result = marshal(taskQry, Task.response_field)
 
         qry = db.session.query(Task, Company, Position).join(Company, Task.company_id == Company.id)
         qry = qry.join(Position, Task.position_id == Position.id).first()
@@ -43,28 +44,32 @@ class TaskResource(Resource):
 
         return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
 
-    
     @jwt_required
     @company_only
     def post(self):
         claims = get_jwt_claims()
 
         parser = reqparse.RequestParser()
+        parser.add_argument('task_data', location='json', type=list, required=True)
         parser.add_argument('position_id', location='json', type=int, required=True)
-        parser.add_argument('name', location='json', required=True)
-        parser.add_argument('description', location='json', required=True)
-        parser.add_argument('active', location='json', type=inputs.boolean, help='invalid active', choices=(True,False))
         args = parser.parse_args()
 
+        if not Validation.ValidatePositionOwnership(self, args['position_id'], claims['id']):
+            return {'status':'failed', "result":"not yours"}, 404, {'Content-Type':'application/json'}
 
-        qry = Task(claims['id'], args['position_id'], datetime.datetime.now(), args['name'], args['description'], args["active"])
+        if not Validation.ValidateExistence(self, args['position_id'], claims['id']):
+            return {'status':'failed', "result":"already Exist"}, 404, {'Content-Type':'application/json'}
 
-        db.session.add(qry)
-        db.session.commit()
+        for iterate, value in enumerate(args["task_data"]):
 
-        app.logger.debug('DEBUG : %s ', qry )
+            task = Task(claims['id'], args['position_id'], datetime.datetime.now(), value['name'], value['description'], value["active"], iterate+1)
 
-        return {"status":"success", "result":marshal(qry, Task.response_field)}, 200, {'Content-Type':'application/json'}
+            db.session.add(task)
+            db.session.commit()
+
+            app.logger.debug('DEBUG : %s ', task )
+
+        return {"status":"success", "result":args['task_data']}, 200, {'Content-Type':'application/json'}
 
     @jwt_required
     @company_only
@@ -176,52 +181,39 @@ class TaskListFull(Resource):
 
         return {"status":"success", "result":results}, 200, {'Content-Type':'application/json'}
 
-
-
-
 api.add_resource(TaskResource, '', '')
 api.add_resource(TaskListWithCompany,'','/list')
 api.add_resource(TaskListFull,'','/list/full')
 
 
-
-
-#data with list type
-    
+#single data type
     # @jwt_required
     # @company_only
     # def post(self):
     #     claims = get_jwt_claims()
 
     #     parser = reqparse.RequestParser()
-    #     parser.add_argument('task_data', location='json', type=list, required=True)
     #     parser.add_argument('position_id', location='json', type=int, required=True)
+    #     parser.add_argument('name', location='json', required=True)
+    #     parser.add_argument('description', location='json', required=True)
+    #     parser.add_argument('active', location='json', type=inputs.boolean, help='invalid active', choices=(True,False))
     #     args = parser.parse_args()
 
-    #     for iterate, value in enumerate(args["task_data"]):
 
-    #         task = Task(claims['id'], args['position_id'], datetime.datetime.now(), value['name'], value['description'], value["active"], iterate+1)
+    #     qry = Task(claims['id'], args['position_id'], datetime.datetime.now(), args['name'], args['description'], args["active"])
 
-    #         db.session.add(task)
-    #         db.session.commit()
+    #     db.session.add(qry)
+    #     db.session.commit()
 
-    #         app.logger.debug('DEBUG : %s ', task )
+    #     app.logger.debug('DEBUG : %s ', qry )
 
-    #     return {"status":"success", "result":args['task_data']}, 200, {'Content-Type':'application/json'}
+    #     return {"status":"success", "result":marshal(qry, Task.response_field)}, 200, {'Content-Type':'application/json'}
 
 #request form
+
 # {
-# 	"position_id":1,
-# 	"task_data": [
-# 		{
-# 			"name": "Pembuatan design pattern",
-# 			"description": "tolong buatkan design pattern untuk golangsss",
-# 			"active": true
-# 		},
-# 		{
-# 			"name": "Pembuatan design pattern",
-# 			"description": "tolong buatkan design pattern untuk pythonsss",
-# 			"active": true
-# 		}
-# 	]
+# 	"position_id":4,
+# 	"name": "Pembuatan design pattern dan koding 22",
+# 	"description": "tolong buatkan koding untuk golangg 22",
+# 	"active": true
 # }
