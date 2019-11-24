@@ -95,7 +95,7 @@ def after_request(response):
 # Import blueprints
 ###############################
 
-from blueprints.Auths import bp_auth
+from blueprints.Auth import bp_auth
 from blueprints.Clients.resources import bp_client
 from blueprints.Pets.resources import bp_pets
 
