@@ -6,7 +6,7 @@ class Company(db.Model):
     __tablename__ = "company"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     created_at = db.Column(db.DateTime, nullable=False)
-    name = db.Column(db.String(255), unique=True, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
     username = db.Column(db.String(30), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     image = db.Column(db.String(1024), nullable=True)
