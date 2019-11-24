@@ -36,27 +36,28 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
 
 jwt = JWTManager(app)
     
-def internal_required(fn):
+def intern_only(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         claims = get_jwt_claims()
-        if not claims['status']:
-            return {'status':'failed', 'message':'FORBIDDEN | Internal Only'}, 403
-        else:
+        if claims['role'] == "intern":
             return fn(*args, **kwargs)
+        else:
+            return {'status':'failed', 'message':'forbidden | internship Only'}, 403
     return wrapper
 
 
-def non_internal_required(fn):
+def company_only(fn):
     @wraps(fn)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         claims = get_jwt_claims()
-        if claims['status']:
-            return {'status':'failed', 'message':'FORBIDDEN | JWT NEEDED'}, 403
-        else:
+        if claims['role'] == "company":
             return fn(*args, **kwargs)
+        else:
+            return {'status':'failed', 'message':'forbidden | company only'}, 403
+
     return wrapper
 
 
@@ -96,11 +97,9 @@ def after_request(response):
 ###############################
 
 from blueprints.Auth import bp_auth
-from blueprints.Clients.resources import bp_client
-from blueprints.Pets.resources import bp_pets
+from blueprints.Interns.resources import bp_interns
 
 app.register_blueprint(bp_auth, url_prefix='/login')
-app.register_blueprint(bp_client, url_prefix='/client' )
-app.register_blueprint(bp_pets, url_prefix='/pets' )
+app.register_blueprint(bp_interns, url_prefix='/intern' )
 
 db.create_all()
