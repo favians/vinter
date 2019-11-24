@@ -1,6 +1,6 @@
 cd $DEPLOYMENT_APP_PATH
 
-git checkout master
+git checkout $DEPLOYMENT_BRANCH
 git pull
 
 sudo docker-compose down
