@@ -53,7 +53,7 @@ def company_only(fn):
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         claims = get_jwt_claims()
-        if claims['role'] == "company":
+        if claims['role'] == 'company':
             return fn(*args, **kwargs)
         else:
             return {'status':'failed', 'message':'forbidden | company only'}, 403
@@ -98,8 +98,10 @@ def after_request(response):
 
 from blueprints.Auth import bp_auth
 from blueprints.Interns.resources import bp_interns
+from blueprints.Company.resources import bp_company
 
 app.register_blueprint(bp_auth, url_prefix='/login')
 app.register_blueprint(bp_interns, url_prefix='/intern' )
+app.register_blueprint(bp_company, url_prefix='/company' )
 
 db.create_all()
