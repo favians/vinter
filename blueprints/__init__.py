@@ -103,6 +103,7 @@ from blueprints.Position.resources import bp_position
 from blueprints.Task.resources import bp_task
 from blueprints.OngoingPosition.resources import bp_ongoing_position
 from blueprints.ChoosePosition.resources import bp_choose_position
+from blueprints.OngoingTask.resources import bp_ongoing_task
 
 app.register_blueprint(bp_auth, url_prefix='/login')
 app.register_blueprint(bp_intern, url_prefix='/intern' )
@@ -111,5 +112,6 @@ app.register_blueprint(bp_position, url_prefix='/position' )
 app.register_blueprint(bp_task, url_prefix='/task' )
 app.register_blueprint(bp_ongoing_position, url_prefix='/ongoingposition' )
 app.register_blueprint(bp_choose_position, url_prefix='/chooseposition' )
+app.register_blueprint(bp_ongoing_task, url_prefix='/ongoingtask' )
 
 db.create_all()
