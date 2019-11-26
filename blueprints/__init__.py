@@ -32,7 +32,7 @@ app.config['APP_DEBUG'] = True
 ###############
 
 app.config['JWT_SECRET_KEY'] = os.getenv("JWT_SECRET")
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=31)
 
 jwt = JWTManager(app)
     
@@ -104,6 +104,7 @@ from blueprints.Task.resources import bp_task
 from blueprints.OngoingPosition.resources import bp_ongoing_position
 from blueprints.ChoosePosition.resources import bp_choose_position
 from blueprints.OngoingTask.resources import bp_ongoing_task
+from blueprints.App.OnGoingPositionAndTask import bp_on_going_pos_task
 
 app.register_blueprint(bp_auth, url_prefix='/login')
 app.register_blueprint(bp_intern, url_prefix='/intern' )
@@ -113,5 +114,6 @@ app.register_blueprint(bp_task, url_prefix='/task' )
 app.register_blueprint(bp_ongoing_position, url_prefix='/ongoingposition' )
 app.register_blueprint(bp_choose_position, url_prefix='/chooseposition' )
 app.register_blueprint(bp_ongoing_task, url_prefix='/ongoingtask' )
+app.register_blueprint(bp_on_going_pos_task, url_prefix='/ongoingtaskposition' )
 
 db.create_all()

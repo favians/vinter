@@ -11,7 +11,7 @@ from blueprints import intern_only, company_only
 from flask_jwt_extended import jwt_required, get_jwt_claims
 
 #import all blueprints
-from .model import OngoingPosition
+from .model import OngoingTask
 from blueprints.Company.model import Company
 from blueprints.Position.model import Position
 from blueprints.Intern.model import Intern
@@ -36,19 +36,24 @@ class OngoingTaskResource(Resource):
 
         result = marshal(ongoingTaskQry, OngoingTask.response_field)
 
-        qry = db.session.query(OngoingTask, Intern, Company, Position)
-        qry = qry.join(Intern, OngoingTask.task_id == Task.id)
+        qry = db.session.query(OngoingTask, Intern, Company, Position, Task)
+        qry = qry.join(Intern, OngoingTask.intern_id == Intern.id)
         qry = qry.join(Company, OngoingTask.company_id == Company.id)
-        qry = qry.join(Position, OngoingTask.position_id == Position.id).first()
+        qry = qry.join(Position, OngoingTask.position_id == Position.id)
+        qry = qry.join(Task, OngoingTask.task_id == Task.id).first()
 
         result["intern_name"] = qry[1].name
-        result["intern_images"] = qry[1].images
+        result["intern_images"] = qry[1].image
         result["intern_address"] = qry[1].address
         result["company_name"] = qry[2].name
         result["company_address"] = qry[2].address
         result["position_name"] = qry[3].name
         result["position_description"] = qry[3].description
         result["position_certificate_trigger_score"] = qry[3].certificate_trigger_score
+        result["task_name"] = qry[4].name
+        result["task_description"] = qry[4].description
+        result["task_active"] = qry[4].active
+        result["task_order"] = qry[4].order
 
         return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
 
