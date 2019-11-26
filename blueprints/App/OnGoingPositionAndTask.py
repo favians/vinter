@@ -23,6 +23,7 @@ api = Api(bp_on_going_pos_task)
 class OnGoingPositionTaskResource(Resource):
 
     @jwt_required
+    @intern_only
     def get(self):
         claims = get_jwt_claims()
 
@@ -39,8 +40,8 @@ class OnGoingPositionTaskResource(Resource):
         for onPosValue in ongoingPositionQry:
             onpos = marshal(onPosValue, OngoingPosition.response_field)
 
-            ongoingTaskQry = OngoingTask.query.filter_by(position_id=onpos["position_id"]).filter_by(intern_id=args["intern_id"]).all()
-            ongoingTask = marshal(ongoingTaskQry, Task.response_field)
+            ongoingTaskQry = OngoingTask.query.filter_by(position_id=onpos["position_id"]).filter_by(intern_id=claims["id"]).all()
+            ongoingTask = marshal(ongoingTaskQry, OngoingTask.response_field)
 
             onpos['ongoing_task'] = ongoingTask
 
