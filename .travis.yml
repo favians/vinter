@@ -16,4 +16,4 @@ deploy:
     skip_cleanup: true
     script: chmod +x $TRAVIS_PROJECT_DIR/deployment/deploy-travis.sh && $TRAVIS_PROJECT_DIR/deployment/deploy-travis.sh
     on:
-      branch: development
+      branch: master

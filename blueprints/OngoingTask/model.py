@@ -2,7 +2,7 @@ from blueprints import db
 from flask_restful import fields
 
 
-class OngoingPosition(db.Model):
+class OngoingTask(db.Model):
     __tablename__ = "ongoing_task"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
@@ -18,19 +18,21 @@ class OngoingPosition(db.Model):
 
     response_field = {
         'id': fields.Integer,
+        'task_id': fields.Integer,
         'intern_id': fields.Integer,
         'company_id': fields.Integer,
         'position_id': fields.Integer,
 
         'created_at': fields.DateTime,
         'done': fields.Boolean,
-        'attachment': fields.Integer,
-        'approve': fields.Integer,
+        'attachment': fields.String,
+        'approve': fields.Boolean,
         'score': fields.Integer,
 
     }
 
-    def __init__(self, intern_id, company_id, position_id, created_at, done, attachment, approve, score):
+    def __init__(self, task_id, intern_id, company_id, position_id, created_at, done, attachment, approve, score):
+        self.task_id = task_id
         self.intern_id = intern_id
         self.company_id = company_id
         self.position_id = position_id
