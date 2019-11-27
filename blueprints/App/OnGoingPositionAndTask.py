@@ -31,7 +31,7 @@ class OnGoingPositionTaskResource(Resource):
         claims = get_jwt_claims()
 
         parser = reqparse.RequestParser()
-        parser.add_argument('intern_id', location='json', type=int, required=True)
+        parser.add_argument('intern_id', location='args', type=int, required=True)
         args = parser.parse_args()
         
         ongoingPositionQry = OngoingPosition.query.filter_by(intern_id = args["intern_id"]).all()

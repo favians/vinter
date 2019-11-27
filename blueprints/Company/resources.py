@@ -8,6 +8,7 @@ from sqlalchemy import desc
 from .model import Company
 from blueprints import intern_only, company_only
 from flask_jwt_extended import jwt_required, get_jwt_claims
+from blueprints.Position.model import Position
 
 #password Encription
 from password_strength import PasswordPolicy
@@ -115,7 +116,11 @@ class CompanyList(Resource):
 
         result = []
         for row in qry.limit(args['rp']).offset(offset).all():
-            result.append(marshal(row, Company.response_field))
+            marComp = marshal(row, Company.response_field)
+            posQry = Position.query.filter_by(company_id=marComp['id']).all()
+            marComp["oportunity"] = len(posQry)
+
+            result.append(marComp)
         
         return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
 
