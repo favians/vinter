@@ -83,8 +83,9 @@ class OngoingTaskList(Resource):
         parser.add_argument('company_id', location='args',type=int)
         parser.add_argument('position_id', location='args',type=int)
         parser.add_argument('ongoing_position_id', location='args',type=int)
-        parser.add_argument('approve',location='args', type=inputs.boolean, help='invalid active', choices=(True,False))
-        parser.add_argument('done',location='args', type=inputs.boolean, help='invalid active', choices=(True,False))
+        parser.add_argument('task_id', location='args',type=int)
+        parser.add_argument('approve',location='args', type=inputs.boolean, help='invalid approve', choices=(True,False))
+        parser.add_argument('done',location='args', type=inputs.boolean, help='invalid done', choices=(True,False))
         args =parser.parse_args()
 
         offset = (args['p'] * args['rp']) - args['rp']
@@ -109,21 +110,27 @@ class OngoingTaskList(Resource):
         if args['done'] is not None:
             qry = qry.filter_by(done=args['done'])
 
+        if args['task_id'] is not None:
+            qry = qry.filter_by(task_id=args['task_id'])
+
 
         result = []
         for row in qry.limit(args['rp']).offset(offset).all():
             OngoingValue = marshal(row, OngoingTask.response_field)
 
+            qryTask = Task.query.get(OngoingValue["task_id"])
             qryIntern = Intern.query.get(OngoingValue["intern_id"])
             qryCompany = Company.query.get(OngoingValue["company_id"])
             qryPosition = Position.query.get(OngoingValue["position_id"])
             qryOnGoPosition = OngoingPosition.query.get(OngoingValue["ongoing_position_id"])
-
+            
+            MarshalqryTask = marshal(qryTask, Task.response_field)
             MarshalqryIntern = marshal(qryIntern, Intern.response_field)
             MarshalqryCompany = marshal(qryCompany, Company.response_field)
             MarshalqryPosition = marshal(qryPosition, Position.response_field)
             MarshalqryOnGoPosition = marshal(qryOnGoPosition, OngoingPosition.response_field)
 
+            OngoingValue["task"] = MarshalqryTask
             OngoingValue["intern"] = MarshalqryIntern
             OngoingValue["company"] = MarshalqryCompany
             OngoingValue["position"] = MarshalqryPosition
