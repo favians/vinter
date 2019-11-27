@@ -13,6 +13,9 @@ class Company(db.Model):
     address = db.Column(db.String(255), nullable=True)
     active = db.Column(db.Boolean, nullable=True, default=False)
     role = db.Column(db.String(255), nullable=True)
+    description = db.Column(db.String(2048), nullable=True)
+    industry = db.Column(db.String(255), nullable=True)
+    location = db.Column(db.String(255), nullable=True)
 
     response_field = {
         'id': fields.Integer,
@@ -23,9 +26,12 @@ class Company(db.Model):
         'address': fields.String,
         'active': fields.Boolean,
         'role': fields.String,
+        'description': fields.String,
+        'industry': fields.String,
+        'location': fields.String,
     }
 
-    def __init__(self, created_at, name, email,password, image, address, active, role):
+    def __init__(self, created_at, name, email,password, image, address, active, role, description, industry, location):
         self.created_at = created_at
         self.name = name
         self.email = email
@@ -34,6 +40,9 @@ class Company(db.Model):
         self.address = address
         self.active = active
         self.role = role
+        self.description = description
+        self.industry = industry
+        self.location = location
 
     def __repr__(self):
         return '<Company %r>' % self.id

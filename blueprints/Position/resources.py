@@ -166,6 +166,10 @@ class PositionListFull(Resource):
             holder = marshal(data[0], Position.response_field)
             holder["company_name"] = data[1].name
             holder["company_address"] = data[1].address
+            holder["company_description"] = data[1].description
+            holder["company_industry"] = data[1].industry
+            holder["company_location"] = data[1].location
+
             result.append(holder)
 
         results = {}

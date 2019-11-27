@@ -45,6 +45,10 @@ class CompanyResource(Resource):
         parser.add_argument('password', location='json', required=True)
         parser.add_argument('image', location='json')
         parser.add_argument('address', location='json')
+        parser.add_argument('description', location='json')
+        parser.add_argument('industry', location='json')
+        parser.add_argument('location', location='json')
+
         args = parser.parse_args()
 
         validation = policy.test(args['password'])
@@ -52,7 +56,7 @@ class CompanyResource(Resource):
         if validation == []:
             password_digest = hashlib.md5(args['password'].encode()).hexdigest()
 
-            company = Company(datetime.datetime.now(), args['name'], args['email'], password_digest, args['image'], args['address'], True, 'company')
+            company = Company(datetime.datetime.now(), args['name'], args['email'], password_digest, args['image'], args['address'], True, 'company',args['description'],args['industry'],args['location'])
             
             try:
                 db.session.add(company)
@@ -82,11 +86,18 @@ class CompanyResource(Resource):
         parser.add_argument('name', location='json', default=defaultdata["name"])
         parser.add_argument('image', location='json', default=defaultdata["image"])
         parser.add_argument('address', location='json', default=defaultdata["address"])
+        parser.add_argument('description', location='json', default=defaultdata["description"])
+        parser.add_argument('industry', location='json', default=defaultdata["industry"])
+        parser.add_argument('location', location='json', default=defaultdata["location"])
         args = parser.parse_args()
 
         qry.name = args["name"]
         qry.image = args["image"]
         qry.address = args["address"]
+        qry.description = args["description"]
+        qry.industry = args["industry"]
+        qry.location = args["location"]
+
         db.session.commit()
 
         return {"status":"success", "result":marshal(qry, Company.response_field)}, 200, {'Content-Type':'application/json'}
