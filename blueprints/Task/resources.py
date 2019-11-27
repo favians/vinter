@@ -192,36 +192,3 @@ class TaskListFull(Resource):
 api.add_resource(TaskResource, '', '')
 api.add_resource(TaskListWithCompany,'','/list')
 api.add_resource(TaskListFull,'','/list/full')
-
-
-#single data type
-    # @jwt_required
-    # @company_only
-    # def post(self):
-    #     claims = get_jwt_claims()
-
-    #     parser = reqparse.RequestParser()
-    #     parser.add_argument('position_id', location='json', type=int, required=True)
-    #     parser.add_argument('name', location='json', required=True)
-    #     parser.add_argument('description', location='json', required=True)
-    #     parser.add_argument('active', location='json', type=inputs.boolean, help='invalid active', choices=(True,False))
-    #     args = parser.parse_args()
-
-
-    #     qry = Task(claims['id'], args['position_id'], datetime.datetime.now(), args['name'], args['description'], args["active"])
-
-    #     db.session.add(qry)
-    #     db.session.commit()
-
-    #     app.logger.debug('DEBUG : %s ', qry )
-
-    #     return {"status":"success", "result":marshal(qry, Task.response_field)}, 200, {'Content-Type':'application/json'}
-
-#request form
-
-# {
-# 	"position_id":4,
-# 	"name": "Pembuatan design pattern dan koding 22",
-# 	"description": "tolong buatkan koding untuk golangg 22",
-# 	"active": true
-# }

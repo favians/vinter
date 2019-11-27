@@ -11,7 +11,7 @@ class Certificate(db.Model):
 
     created_at = db.Column(db.DateTime, nullable=False)
     image = db.Column(db.String(2048), nullable=False)
-    order = db.Column(db.Integer, nullable=False)
+    score = db.Column(db.Integer, nullable=False)
 
     response_field = {
         'id': fields.Integer,
@@ -21,17 +21,17 @@ class Certificate(db.Model):
 
         'created_at': fields.DateTime,
         'image': fields.String,
-        'order': fields.Integer,
+        'score': fields.Integer,
     }
 
-    def __init__(self, position_id, company_id, intern_id, created_at, image, order):
+    def __init__(self, position_id, company_id, intern_id, created_at, image, score):
         self.position_id = position_id
         self.company_id = company_id
         self.intern_id = intern_id
 
         self.created_at = created_at
         self.image = image
-        self.order = order
+        self.score = score
 
     def __repr__(self):
         return '<Certificate %r>' % self.id

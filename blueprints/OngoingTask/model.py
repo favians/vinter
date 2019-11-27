@@ -9,6 +9,7 @@ class OngoingTask(db.Model):
     intern_id = db.Column(db.Integer, db.ForeignKey('interns.id'), nullable=False)
     company_id = db.Column(db.Integer, db.ForeignKey('company.id'), nullable=False)
     position_id = db.Column(db.Integer, db.ForeignKey('position.id'), nullable=False)
+    ongoing_position_id = db.Column(db.Integer, db.ForeignKey('ongoing_position.id'), nullable=False)
 
     created_at = db.Column(db.DateTime, nullable=False)
     done = db.Column(db.Boolean, nullable=True, default=False)
@@ -22,6 +23,7 @@ class OngoingTask(db.Model):
         'intern_id': fields.Integer,
         'company_id': fields.Integer,
         'position_id': fields.Integer,
+        'ongoing_position_id': fields.Integer,
 
         'created_at': fields.DateTime,
         'done': fields.Boolean,
@@ -31,11 +33,12 @@ class OngoingTask(db.Model):
 
     }
 
-    def __init__(self, task_id, intern_id, company_id, position_id, created_at, done, attachment, approve, score):
+    def __init__(self, task_id, intern_id, company_id, position_id, ongoing_position_id, created_at, done, attachment, approve, score):
         self.task_id = task_id
         self.intern_id = intern_id
         self.company_id = company_id
         self.position_id = position_id
+        self.ongoing_position_id = ongoing_position_id
 
         self.created_at = created_at
         self.done = done

@@ -16,6 +16,7 @@ from blueprints.Company.model import Company
 from blueprints.Position.model import Position
 from blueprints.Intern.model import Intern
 from blueprints.Task.model import Task
+from blueprints.OngoingPosition.model import OngoingPosition
 
 # 'ongoing_task' penamaan (boleh diganti)
 bp_ongoing_task = Blueprint('ongoing_task', __name__)
@@ -39,11 +40,12 @@ class OngoingTaskResource(Resource):
 
         result = marshal(ongoingTaskQry, OngoingTask.response_field)
 
-        qry = db.session.query(OngoingTask, Intern, Company, Position, Task).filter(OngoingTask.id == args["id"])
+        qry = db.session.query(OngoingTask, Intern, Company, Position, Task, On).filter(OngoingTask.id == args["id"])
         qry = qry.join(Intern, OngoingTask.intern_id == Intern.id)
         qry = qry.join(Company, OngoingTask.company_id == Company.id)
         qry = qry.join(Position, OngoingTask.position_id == Position.id)
-        qry = qry.join(Task, OngoingTask.task_id == Task.id).first()
+        qry = qry.join(Task, OngoingTask.task_id == Task.id)
+        qry = qry.join(OngoingPosition, OngoingTask.ongoing_position_id == OngoingPosition.id).first()
 
         result["intern_email"] = qry[1].email
         result["intern_name"] = qry[1].name
@@ -60,6 +62,7 @@ class OngoingTaskResource(Resource):
         result["task_description"] = qry[4].description
         result["task_active"] = qry[4].active
         result["task_order"] = qry[4].order
+        result["ongoing_position_id"] = qry[5].ongoing_position_id
 
         return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
 

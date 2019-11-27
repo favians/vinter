@@ -43,7 +43,7 @@ class OnGoingPositionTaskResource(Resource):
         for onPosValue in ongoingPositionQry:
             onpos = marshal(onPosValue, OngoingPosition.response_field)
 
-            ongoingTaskQry = OngoingTask.query.filter_by(position_id=onpos["position_id"]).filter_by(intern_id=claims["id"]).all()
+            ongoingTaskQry = OngoingTask.query.filter_by(ongoing_position_id=onpos["id"]).all()
             ongoingTask = marshal(ongoingTaskQry, OngoingTask.response_field)
 
             onpos['ongoing_task'] = ongoingTask

@@ -53,15 +53,17 @@ class ChoosePositionResource(Resource):
         db.session.add(qry)
         db.session.commit()
 
-        self.InsertToOngoingTask(task, claims['id'], position["company_id"], args["position_id"])
+        ongoingPos = marshal(qry, OngoingPosition.response_field)
+
+        self.InsertToOngoingTask(task, claims['id'], position["company_id"], args["position_id"], ongoingPos["id"])
 
         app.logger.debug("DEBUG : %s ", qry)
 
-        return {"status":"success", "result":marshal(qry, OngoingPosition.response_field)}, 200, {"Content-Type":"application/json"}
+        return {"status":"success", "result":ongoingPos}, 200, {"Content-Type":"application/json"}
 
-    def InsertToOngoingTask(self, task, internID, companyID, positionID):
+    def InsertToOngoingTask(self, task, internID, companyID, positionID, ongoingPosID):
         for TaskValue in task:
-            qry = OngoingTask(TaskValue["id"], internID, companyID, positionID, datetime.datetime.now(), False, "", False, 0)
+            qry = OngoingTask(TaskValue["id"], internID, companyID, positionID, ongoingPosID, datetime.datetime.now(), False, "", False, 0)
 
             db.session.add(qry)
             db.session.commit()
