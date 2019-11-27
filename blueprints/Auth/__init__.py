@@ -15,7 +15,7 @@ class CreateInternTokenResource(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('username', location='json', required=True)
+        parser.add_argument('email', location='json', required=True)
         parser.add_argument('password', location='json', required=True)
         args = parser.parse_args()
 
@@ -24,14 +24,14 @@ class CreateInternTokenResource(Resource):
         ###### from database ########
         qry = Intern.query
 
-        qry = qry.filter_by(username = args['username'])
+        qry = qry.filter_by(email = args['email'])
         qry = qry.filter_by(password = password).first()
          
 
         claim = marshal(qry, Intern.response_field)
 
         if qry is not None:
-            token = create_access_token(identity=args['username'], user_claims=claim)
+            token = create_access_token(identity=args['email'], user_claims=claim)
         else:
             return {'status':'failed', 'result': 'UNAUTHORIZED | invalid key or secret'}, 401
 
@@ -44,7 +44,7 @@ class CreateCompanyTokenResource(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('username', location='json', required=True)
+        parser.add_argument('email', location='json', required=True)
         parser.add_argument('password', location='json', required=True)
         args = parser.parse_args()
 
@@ -53,14 +53,14 @@ class CreateCompanyTokenResource(Resource):
         ###### from database ########
         qry = Company.query
 
-        qry = qry.filter_by(username = args['username'])
+        qry = qry.filter_by(email = args['email'])
         qry = qry.filter_by(password = password).first()
          
 
         claim = marshal(qry, Company.response_field)
 
         if qry is not None:
-            token = create_access_token(identity=args['username'], user_claims=claim)
+            token = create_access_token(identity=args['email'], user_claims=claim)
         else:
             return {'status':'failed', 'result': 'UNAUTHORIZED | invalid key or secret'}, 401
 

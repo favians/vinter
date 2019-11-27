@@ -40,7 +40,7 @@ class CompanyResource(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('name', location='json', required=True)
-        parser.add_argument('username', location='json', required=True)
+        parser.add_argument('email', location='json', required=True)
         parser.add_argument('password', location='json', required=True)
         parser.add_argument('image', location='json')
         parser.add_argument('address', location='json')
@@ -51,7 +51,7 @@ class CompanyResource(Resource):
         if validation == []:
             password_digest = hashlib.md5(args['password'].encode()).hexdigest()
 
-            company = Company(datetime.datetime.now(), args['name'], args['username'], password_digest, args['image'], args['address'], True, 'company')
+            company = Company(datetime.datetime.now(), args['name'], args['email'], password_digest, args['image'], args['address'], True, 'company')
             
             try:
                 db.session.add(company)

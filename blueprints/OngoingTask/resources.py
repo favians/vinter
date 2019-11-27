@@ -45,9 +45,12 @@ class OngoingTaskResource(Resource):
         qry = qry.join(Position, OngoingTask.position_id == Position.id)
         qry = qry.join(Task, OngoingTask.task_id == Task.id).first()
 
+        result["intern_email"] = qry[1].email
         result["intern_name"] = qry[1].name
-        result["intern_images"] = qry[1].image
+        result["intern_image"] = qry[1].image
         result["intern_address"] = qry[1].address
+        result["intern_pendidikan"] = qry[1].pendidikan
+        result["intern_deskripsi"] = qry[1].deskripsi
         result["company_name"] = qry[2].name
         result["company_address"] = qry[2].address
         result["position_name"] = qry[3].name
