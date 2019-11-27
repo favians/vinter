@@ -52,6 +52,7 @@ class OnGoingPositionTaskResource(Resource):
             onpos['position_name'] = findPos['name']
             onpos['position_image'] = findPos['image']
             onpos['company_name'] = findComp['name']
+            onpos['percentage'] = str((onpos['completed_task']*100)/onpos['total_task']) +"%"
             onpos['ongoing_task'] = ongoingTask
 
             result.append(onpos)

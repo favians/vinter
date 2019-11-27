@@ -153,7 +153,7 @@ class PositionListFull(Resource):
 
         offset = (args['p'] * args['rp']) - args['rp']
 
-        qry = db.session.query(Position, Company).join(Position, Position.company_id == Company.id)
+        qry = db.session.query(Position, Company).join(Company, Company.id == Position.company_id)
 
         if args['company_id'] is not None:
             qry = qry.filter_by(company_id=args['company_id'])
