@@ -40,10 +40,12 @@ class InternResource(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('name', location='json', required=True)
-        parser.add_argument('username', location='json', required=True)
+        parser.add_argument('email', location='json', required=True)
         parser.add_argument('password', location='json', required=True)
         parser.add_argument('image', location='json')
         parser.add_argument('address', location='json')
+        parser.add_argument('pendidikan', location='json')
+        parser.add_argument('deskripsi', location='json')
         args = parser.parse_args()
 
         validation = policy.test(args['password'])
@@ -51,7 +53,7 @@ class InternResource(Resource):
         if validation == []:
             password_digest = hashlib.md5(args['password'].encode()).hexdigest()
 
-            intern = Intern(datetime.datetime.now(), args['name'], args['username'], password_digest, args['image'], args['address'], True, 'intern')
+            intern = Intern(datetime.datetime.now(), args['name'], password_digest, args['image'], args['address'], True, 'intern', args['email'], args['pendidikan'], args['deskripsi'])
             
             try:
                 db.session.add(intern)
@@ -81,11 +83,16 @@ class InternResource(Resource):
         parser.add_argument('name', location='json', default=defaultdata["name"])
         parser.add_argument('image', location='json', default=defaultdata["image"])
         parser.add_argument('address', location='json', default=defaultdata["address"])
+        parser.add_argument('pendidikan', location='json', default=defaultdata["pendidikan"])
+        parser.add_argument('deskripsi', location='json', default=defaultdata["deskripsi"])
         args = parser.parse_args()
 
         qry.name = args["name"]
         qry.image = args["image"]
         qry.address = args["address"]
+        qry.pendidikan = args["pendidikan"]
+        qry.deskripsi = args["deskripsi"]
+
         db.session.commit()
 
         return {"status":"success", "result":marshal(qry, Intern.response_field)}, 200, {'Content-Type':'application/json'}

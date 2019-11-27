@@ -43,9 +43,12 @@ class CertificateResource(Resource):
         result["position_name"] = qry[1].name
         result["position_description"] = qry[1].description
         result["position_certificate_trigger_score"] = qry[1].certificate_trigger_score
+        result["intern_email"] = qry[2].email
         result["intern_name"] = qry[2].name
         result["intern_image"] = qry[2].image
         result["intern_address"] = qry[2].address
+        result["intern_pendidikan"] = qry[2].pendidikan
+        result["intern_deskripsi"] = qry[2].deskripsi
         result["company_name"] = qry[3].name
         result["company_address"] = qry[3].address
 
@@ -135,9 +138,12 @@ class CertificateListFull(Resource):
             holder["position_name"] = data[1].name
             holder["position_description"] = data[1].description
             holder["position_certificate_trigger_score"] = data[1].certificate_trigger_score
-            holder["intern_name"] = data[2].name
-            holder["intern_image"] = data[2].image
-            holder["intern_address"] = data[2].address
+            result["intern_email"] = qry[2].email
+            result["intern_name"] = qry[2].name
+            result["intern_image"] = qry[2].image
+            result["intern_address"] = qry[2].address
+            result["intern_pendidikan"] = qry[2].pendidikan
+            result["intern_deskripsi"] = qry[2].deskripsi
             holder["company_name"] = data[3].name
             holder["company_address"] = data[3].address
             result.append(holder)
