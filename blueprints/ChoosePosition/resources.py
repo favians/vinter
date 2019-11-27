@@ -23,6 +23,9 @@ api = Api(bp_choose_position)
 
 class ChoosePositionResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     @intern_only
     def post(self):

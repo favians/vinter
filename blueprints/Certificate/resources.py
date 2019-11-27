@@ -19,6 +19,9 @@ api = Api(bp_certificate)
 
 class CertificateResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     def get(self):
         parser = reqparse.RequestParser()
@@ -32,7 +35,7 @@ class CertificateResource(Resource):
 
         result = marshal(certificateQry, Certificate.response_field)
 
-        qry = db.session.query(Certificate, Position, Intern, Company)
+        qry = db.session.query(Certificate, Position, Intern, Company).filter(Certificate.id == args["id"])
         qry = qry.join(Position, Certificate.position_id == Position.id)
         qry = qry.join(Intern, Certificate.intern_id == Intern.id)
         qry = qry.join(Company, Certificate.company_id == Company.id).first()
@@ -50,6 +53,9 @@ class CertificateResource(Resource):
 
 
 class CertificateList(Resource):
+
+    def options(self):
+        return {},200
 
     def __init__(self):
         pass
@@ -84,6 +90,9 @@ class CertificateList(Resource):
         return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
 
 class CertificateListFull(Resource):
+
+    def options(self):
+        return {},200
 
     def __init__(self):
         pass

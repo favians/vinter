@@ -20,6 +20,9 @@ api = Api(bp_task)
 
 class TaskResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     def get(self):
         parser = reqparse.RequestParser()
@@ -33,9 +36,8 @@ class TaskResource(Resource):
 
         result = marshal(taskQry, Task.response_field)
 
-        qry = db.session.query(Task, Company, Position).join(Company, Task.company_id == Company.id)
-        qry = qry.join(Position, Task.position_id == Position.id).first()
-
+        qry = db.session.query(Task, Company, Position).filter(Task.id == args["id"]).join(Company, Task.company_id == Company.id)
+        qry = qry.join(Position, Task.position_id == Position.id).first()        
         result["company_name"] = qry[1].name
         result["company_address"] = qry[1].address
         result["position_name"] = qry[2].name
@@ -100,6 +102,9 @@ class TaskResource(Resource):
 
 class TaskListWithCompany(Resource):
 
+    def options(self):
+        return {},200
+
     def __init__(self):
         pass
 
@@ -133,6 +138,9 @@ class TaskListWithCompany(Resource):
         return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
 
 class TaskListFull(Resource):
+
+    def options(self):
+        return {},200
 
     def __init__(self):
         pass

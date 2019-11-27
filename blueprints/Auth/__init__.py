@@ -9,6 +9,10 @@ bp_auth = Blueprint('auth', __name__)
 api = Api(bp_auth)
 
 class CreateInternTokenResource(Resource):
+    
+    def options(self):
+        return {},200
+
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('username', location='json', required=True)
@@ -34,6 +38,10 @@ class CreateInternTokenResource(Resource):
         return {"status":"success",'result': token}, 200, {'Content-Type':'application/json'}
 
 class CreateCompanyTokenResource(Resource):
+
+    def options(self):
+        return {},200
+
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('username', location='json', required=True)

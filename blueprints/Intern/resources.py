@@ -18,6 +18,9 @@ api = Api(bp_intern)
 
 class InternResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     def get(self):
         parser = reqparse.RequestParser()
@@ -88,6 +91,9 @@ class InternResource(Resource):
         return {"status":"success", "result":marshal(qry, Intern.response_field)}, 200, {'Content-Type':'application/json'}
 
 class InternList(Resource):
+
+    def options(self):
+        return {},200
 
     def __init__(self):
         pass
