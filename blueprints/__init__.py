@@ -20,12 +20,15 @@ load_dotenv()
 
 # OR, explicitly providing path to '.env'
 from pathlib import Path  # python3 only
+from flask_cors import CORS
+
 env_path = Path('.') / '.env'
 load_dotenv(dotenv_path=env_path)
 
 
 app = Flask(__name__)
 app.config['APP_DEBUG'] = True
+CORS(app)
 
 #################
 # JWT
@@ -107,6 +110,7 @@ from blueprints.OngoingTask.resources import bp_ongoing_task
 from blueprints.App.OnGoingPositionAndTask import bp_on_going_pos_task
 from blueprints.App.ProcessDoneTask import bp_done_task
 from blueprints.Certificate.resources import bp_certificate
+from blueprints.App.CompanyAcceptance import bp_company_accept
 
 app.register_blueprint(bp_auth, url_prefix='/login')
 app.register_blueprint(bp_intern, url_prefix='/intern' )
@@ -119,5 +123,7 @@ app.register_blueprint(bp_ongoing_task, url_prefix='/ongoingtask' )
 app.register_blueprint(bp_on_going_pos_task, url_prefix='/ongoingtaskposition' )
 app.register_blueprint(bp_done_task, url_prefix='/donetask' )
 app.register_blueprint(bp_certificate, url_prefix='/certificate' )
+app.register_blueprint(bp_company_accept, url_prefix='/companyaccept' )
+
 
 db.create_all()

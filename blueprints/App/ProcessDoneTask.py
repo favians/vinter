@@ -22,6 +22,9 @@ api = Api(bp_done_task)
 
 class ProcessDoneResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     def post(self):
         claims = get_jwt_claims()

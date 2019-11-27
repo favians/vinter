@@ -23,6 +23,9 @@ api = Api(bp_ongoing_position)
 
 class OngoingPositionResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     def get(self):
         parser = reqparse.RequestParser()
@@ -36,10 +39,9 @@ class OngoingPositionResource(Resource):
 
         result = marshal(ongoingPositionQry, OngoingPosition.response_field)
 
-        qry = db.session.query(OngoingPosition, Company, Position)
+        qry = db.session.query(OngoingPosition, Company, Position).filter(OngoingPosition.id == args["id"])
         qry = qry.join(Company, OngoingPosition.company_id == Company.id)
         qry = qry.join(Position, OngoingPosition.position_id == Position.id).first()
-
         result["company_name"] = qry[1].name
         result["company_address"] = qry[1].address
         result["position_name"] = qry[2].name

@@ -22,6 +22,9 @@ api = Api(bp_on_going_pos_task)
 
 class OnGoingPositionTaskResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     @intern_only
     def get(self):

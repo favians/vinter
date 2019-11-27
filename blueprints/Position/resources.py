@@ -17,6 +17,9 @@ api = Api(bp_position)
 
 class PositionResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     def get(self):
         parser = reqparse.RequestParser()
@@ -29,7 +32,7 @@ class PositionResource(Resource):
             return {'status':'failed', "result" : "id not found"}, 404, {'Content-Type':'application/json'}
 
         result = marshal(positionQry, Position.response_field)
-        qry = db.session.query(Position, Company).join(Position, Position.company_id == Company.id).first()
+        qry = db.session.query(Position, Company).filter(Position.id == args["id"]).join(Position, Position.company_id == Company.id).first()
         result["company_name"] = qry[1].name
         result["company_address"] = qry[1].address
 
@@ -88,6 +91,9 @@ class PositionResource(Resource):
 
 class PositionList(Resource):
 
+    def options(self):
+        return {},200
+
     def __init__(self):
         pass
 
@@ -124,6 +130,9 @@ class PositionList(Resource):
         return {"status":"success", "result":results}, 200, {'Content-Type':'application/json'}
 
 class PositionListFull(Resource):
+
+    def options(self):
+        return {},200
 
     def __init__(self):
         pass

@@ -16,11 +16,14 @@ from blueprints.Task.model import Task
 from blueprints.OngoingTask.model import OngoingTask
 from blueprints.OngoingPosition.model import OngoingPosition
 
-# 'done_task' penamaan (boleh diganti)
-bp_done_task = Blueprint('done_task', __name__)
-api = Api(bp_done_task)
+# 'company_accept' penamaan (boleh diganti)
+bp_company_accept = Blueprint('company_accept', __name__)
+api = Api(bp_company_accept)
 
-class ProcessDoneResource(Resource):
+class CompanyAcceptanceResource(Resource):
+    
+    def options(self):
+        return {},200
 
     @jwt_required
     def post(self):
@@ -28,19 +31,29 @@ class ProcessDoneResource(Resource):
 
         parser = reqparse.RequestParser()
         parser.add_argument('ongoing_task_id', location='json', type=int, required=True)
-        parser.add_argument('attachment', location='json')
+        parser.add_argument('score', location='json', type=int, required=True)
         args = parser.parse_args()
         
         ongoingTaskQry = OngoingTask.query.get(args['ongoing_task_id'])
         
         if ongoingTaskQry is None:
             return {'status':'failed', "result" : "ongoing_task_id not found"}, 404, {'Content-Type':'application/json'}
-
-        ongoingTaskQry.done = True
-        ongoingTaskQry.attachment = args["attachment"]
+        
+        ongoingTValue = marshal(ongoingTaskQry, OngoingTask.response_field)
+        ongoingTaskQry.approve = True
+        ongoingTaskQry.score = args["score"]
 
         db.session.commit()
 
-        return {"status":"success", "result":marshal(ongoingTaskQry, OngoingTask.response_field)}, 200, {"Content-Type":"application/json"}
+        ongoingPosQry = OngoingPosition.query.filter_by(intern_id = ongoingTValue["intern_id"]).filter_by(position_id = ongoingTValue["position_id"]).first()
+        ongoingPosValue = marshal(ongoingPosQry, OngoingPosition.response_field)
 
-api.add_resource(ProcessDoneResource, '', '')
+        self.Certificate(ongoingPosValue, ongoingTValue)
+
+        return {"status":"success", "result": ongoingTValue}, 200, {"Content-Type":"application/json"}
+
+    def Certificate(self, OnPos, OnTask):
+        return True
+
+
+api.add_resource(CompanyAcceptanceResource, '', '')

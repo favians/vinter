@@ -23,6 +23,9 @@ api = Api(bp_ongoing_task)
 
 class OngoingTaskResource(Resource):
 
+    def options(self):
+        return {},200
+
     @jwt_required
     def get(self):
         parser = reqparse.RequestParser()
@@ -36,7 +39,7 @@ class OngoingTaskResource(Resource):
 
         result = marshal(ongoingTaskQry, OngoingTask.response_field)
 
-        qry = db.session.query(OngoingTask, Intern, Company, Position, Task)
+        qry = db.session.query(OngoingTask, Intern, Company, Position, Task).filter(OngoingTask.id == args["id"])
         qry = qry.join(Intern, OngoingTask.intern_id == Intern.id)
         qry = qry.join(Company, OngoingTask.company_id == Company.id)
         qry = qry.join(Position, OngoingTask.position_id == Position.id)
