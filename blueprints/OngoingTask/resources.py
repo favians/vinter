@@ -83,7 +83,8 @@ class OngoingTaskList(Resource):
         parser.add_argument('company_id', location='args',type=int)
         parser.add_argument('position_id', location='args',type=int)
         parser.add_argument('ongoing_position_id', location='args',type=int)
-        parser.add_argument('active',location='args', type=inputs.boolean, help='invalid active', choices=(True,False))
+        parser.add_argument('approve',location='args', type=inputs.boolean, help='invalid active', choices=(True,False))
+        parser.add_argument('done',location='args', type=inputs.boolean, help='invalid active', choices=(True,False))
         args =parser.parse_args()
 
         offset = (args['p'] * args['rp']) - args['rp']
@@ -102,8 +103,12 @@ class OngoingTaskList(Resource):
         if args['ongoing_position_id'] is not None:
             qry = qry.filter_by(ongoing_position_id=args['ongoing_position_id'])
 
-        if args['active'] is not None:
-            qry = qry.filter_by(active=args['active'])
+        if args['approve'] is not None:
+            qry = qry.filter_by(approve=args['approve'])
+
+        if args['done'] is not None:
+            qry = qry.filter_by(done=args['done'])
+
 
         result = []
         for row in qry.limit(args['rp']).offset(offset).all():
