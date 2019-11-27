@@ -66,4 +66,67 @@ class OngoingTaskResource(Resource):
 
         return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
 
+class OngoingTaskList(Resource):
+
+    def options(self):
+        return {},200
+
+    def __init__(self):
+        pass
+
+    @jwt_required
+    def get(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('p', type=int, location='args', default=1)
+        parser.add_argument('rp',type=int, location='args', default=25)
+        parser.add_argument('intern_id', location='args',type=int)
+        parser.add_argument('company_id', location='args',type=int)
+        parser.add_argument('position_id', location='args',type=int)
+        parser.add_argument('ongoing_position_id', location='args',type=int)
+        parser.add_argument('active',location='args', type=inputs.boolean, help='invalid active', choices=(True,False))
+        args =parser.parse_args()
+
+        offset = (args['p'] * args['rp']) - args['rp']
+
+        qry = OngoingTask.query
+
+        if args['intern_id'] is not None:
+            qry = qry.filter_by(intern_id=args['intern_id'])
+
+        if args['company_id'] is not None:
+            qry = qry.filter_by(company_id=args['company_id'])
+
+        if args['position_id'] is not None:
+            qry = qry.filter_by(position_id=args['position_id'])
+
+        if args['ongoing_position_id'] is not None:
+            qry = qry.filter_by(ongoing_position_id=args['ongoing_position_id'])
+
+        if args['active'] is not None:
+            qry = qry.filter_by(active=args['active'])
+
+        result = []
+        for row in qry.limit(args['rp']).offset(offset).all():
+            OngoingValue = marshal(row, OngoingTask.response_field)
+
+            qryIntern = Intern.query.get(OngoingValue["intern_id"])
+            qryCompany = Company.query.get(OngoingValue["company_id"])
+            qryPosition = Position.query.get(OngoingValue["position_id"])
+            qryOnGoPosition = OngoingPosition.query.get(OngoingValue["ongoing_position_id"])
+
+            MarshalqryIntern = marshal(qryIntern, Intern.response_field)
+            MarshalqryCompany = marshal(qryCompany, Company.response_field)
+            MarshalqryPosition = marshal(qryPosition, Position.response_field)
+            MarshalqryOnGoPosition = marshal(qryOnGoPosition, OngoingPosition.response_field)
+
+            OngoingValue["intern"] = MarshalqryIntern
+            OngoingValue["company"] = MarshalqryCompany
+            OngoingValue["position"] = MarshalqryPosition
+            OngoingValue["ongoing_position"] = MarshalqryOnGoPosition
+
+            result.append(OngoingValue)
+        
+        return {"status":"success", "result":result}, 200, {'Content-Type':'application/json'}
+
 api.add_resource(OngoingTaskResource, '', '')
+api.add_resource(OngoingTaskList, '', '/list')
