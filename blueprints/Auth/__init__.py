@@ -27,7 +27,6 @@ class CreateInternTokenResource(Resource):
         qry = qry.filter_by(email = args['email'])
         qry = qry.filter_by(password = password).first()
          
-
         claim = marshal(qry, Intern.response_field)
 
         if qry is not None:
@@ -35,7 +34,7 @@ class CreateInternTokenResource(Resource):
         else:
             return {'status':'failed', 'result': 'UNAUTHORIZED | invalid key or secret'}, 401
 
-        return {"status":"success",'result': token}, 200, {'Content-Type':'application/json'}
+        return {"status":"success",'result': token, 'claims':claim}, 200, {'Content-Type':'application/json'}
 
 class CreateCompanyTokenResource(Resource):
 
@@ -64,7 +63,7 @@ class CreateCompanyTokenResource(Resource):
         else:
             return {'status':'failed', 'result': 'UNAUTHORIZED | invalid key or secret'}, 401
 
-        return {"status":"success",'result': token}, 200, {'Content-Type':'application/json'}
+        return {"status":"success",'result': token, 'claims':claim}, 200, {'Content-Type':'application/json'}
 
 class CheckSelf(Resource):
 
