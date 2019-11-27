@@ -12,6 +12,7 @@ class Position(db.Model):
     description = db.Column(db.String(2048), nullable=True)
     active = db.Column(db.Boolean, nullable=True, default=False)
     certificate_trigger_score = db.Column(db.Integer, nullable=False)
+    image = db.Column(db.String(2048), nullable=True)
 
     response_field = {
         'id': fields.Integer,
@@ -22,9 +23,10 @@ class Position(db.Model):
         'description': fields.String,
         'active': fields.Boolean,
         'certificate_trigger_score': fields.Integer,
+        'image': fields.String,
     }
 
-    def __init__(self, company_id, created_at, name, description, active, certificate_trigger_score):
+    def __init__(self, company_id, created_at, name, description, active, certificate_trigger_score, image):
         self.company_id = company_id
 
         self.created_at = created_at
@@ -32,6 +34,7 @@ class Position(db.Model):
         self.description = description
         self.active = active
         self.certificate_trigger_score = certificate_trigger_score
+        self.image = image
 
     def __repr__(self):
         return '<Position %r>' % self.id

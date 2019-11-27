@@ -48,9 +48,10 @@ class PositionResource(Resource):
         parser.add_argument('description', location='json')
         parser.add_argument('active', location='json', type=inputs.boolean, help='invalid active', choices=(True,False))
         parser.add_argument('certificate_trigger_score', location='json', type=int, required=True)
+        parser.add_argument('image', location='json')
         args = parser.parse_args()
 
-        qry = Position(claims["id"], datetime.datetime.now(), args["name"], args["description"], args["active"] , args["certificate_trigger_score"])
+        qry = Position(claims["id"], datetime.datetime.now(), args["name"], args["description"], args["active"] , args["certificate_trigger_score"], args["image"])
 
         db.session.add(qry)
         db.session.commit()
@@ -79,12 +80,15 @@ class PositionResource(Resource):
         parser.add_argument('description', location='json', default=defaultdata["description"])
         parser.add_argument('active', location='json', type=inputs.boolean, help='invalid active', choices=(True,False))
         parser.add_argument('certificate_trigger_score', location='json', type=int, default=defaultdata["certificate_trigger_score"])
+        parser.add_argument('image', location='json', default=defaultdata["image"])
+
         args = parser.parse_args()
 
         qry.name = args["name"]
         qry.description = args["description"]
         qry.active = args["active"]
         qry.certificate_trigger_score = args["certificate_trigger_score"]
+        qry.image = args["image"]
         db.session.commit()
 
         return {"status":"success", "result":marshal(qry, Position.response_field)}, 200, {'Content-Type':'application/json'}
