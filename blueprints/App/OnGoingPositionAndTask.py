@@ -49,10 +49,16 @@ class OnGoingPositionTaskResource(Resource):
             ongoingTaskQry = OngoingTask.query.filter_by(ongoing_position_id=onpos["id"]).all()
             ongoingTask = marshal(ongoingTaskQry, OngoingTask.response_field)
             
+            percentage = ''
+            try:
+                percentage = str((onpos['completed_task']*100)/onpos['total_task']) +"%"
+            except:
+                percentage = '0.0%'
+
             onpos['position_name'] = findPos['name']
             onpos['position_image'] = findPos['image']
             onpos['company_name'] = findComp['name']
-            onpos['percentage'] = str((onpos['completed_task']*100)/onpos['total_task']) +"%"
+            onpos['percentage'] = percentage
             onpos['ongoing_task'] = ongoingTask
 
             result.append(onpos)
