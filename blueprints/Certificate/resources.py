@@ -115,10 +115,7 @@ class CertificateListFull(Resource):
 
         offset = (args['p'] * args['rp']) - args['rp']
 
-        qry = db.session.query(Certificate, Position, Intern, Company)
-        qry = qry.join(Position, Certificate.position_id == Position.id)
-        qry = qry.join(Intern, Certificate.intern_id == Intern.id)
-        qry = qry.join(Certificate, Certificate.company_id == Company.id).all()
+        qry = Certificate.query
 
         if args['company_id'] is not None:
             qry = qry.filter_by(company_id=args['company_id'])
@@ -134,18 +131,20 @@ class CertificateListFull(Resource):
 
         result = []
         for data in qry.limit(args['rp']).offset(offset).all():
-            holder = marshal(data[0], Certificate.response_field)
-            holder["position_name"] = data[1].name
-            holder["position_description"] = data[1].description
-            holder["position_certificate_trigger_score"] = data[1].certificate_trigger_score
-            result["intern_email"] = qry[2].email
-            result["intern_name"] = qry[2].name
-            result["intern_image"] = qry[2].image
-            result["intern_address"] = qry[2].address
-            result["intern_pendidikan"] = qry[2].pendidikan
-            result["intern_deskripsi"] = qry[2].deskripsi
-            holder["company_name"] = data[3].name
-            holder["company_address"] = data[3].address
+            holder = marshal(data, Certificate.response_field)
+            
+            companyQry = Company.query.get(holder['company_id'])
+            positionQry = Position.query.get(holder['position_id'])
+            internQry = Intern.query.get(holder['intern_id'])
+
+            companyQryMarshal = marshal(companyQry, Company.response_field)
+            positionQryMarshal = marshal(positionQry, Position.response_field)
+            internQryMarshal = marshal(internQry, Intern.response_field)
+
+            holder["company"] = companyQryMarshal
+            holder["position"] = positionQryMarshal
+            holder["intern"] = internQryMarshal
+
             result.append(holder)
 
         results = {}
